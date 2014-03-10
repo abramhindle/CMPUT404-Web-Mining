@@ -4,9 +4,10 @@
 	<head>
 		<meta charset="utf-8"/>
 
-		<title>Introduction to Javscript</title>
+		<title>Web Mining / Screen Scraping</title>
 
-		<meta name="description" content="AJAX and AJAX Patterns
+		<meta name="description" content="Web Mining and
+                                                  Screen Scraping
                                                   CMPUT404"/>
 		<meta name="author" content="Abram Hindle"/>
 
@@ -39,7 +40,7 @@
 			<div class="slides">
 
 			  <section>
-			    <h1>AJAX Patterns</h1>
+			    <h1>Web Mining</h1>
 			    <p>
 			      <small>Created
 				by <a href="http://softwareprocess.es">Abram
@@ -64,17 +65,13 @@
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX
+## Web Mining / Web automation
 
-* Asynchronous JavaScript and XML
-  * Client Side
-  * Allows Javascript to make HTTP requests and interpret the results
-  without redirecting the browser.
-  * Enables heavy-clients and lightweight webservices
-  * Can be used to avoid presentation responsibility on the
-  webservice.
-  * JSON is a common replacement for XML
-  * Twitter.com is heavy on Ajax
+* Web mining is the mining of information from the web
+  * mining website access and error logs
+  * mining websites
+  * mining webservices
+  * automating tasks by automating website access
 </script>
 </div>
 </section>
@@ -84,13 +81,13 @@
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX
+## Web Mining
 
-* Disadvantages of AJAX ridden websites
-  * History and Back button
-  * Bookmarks
-  * Browser Portability
-  * Same origin policy -- Ajax is not cross domain.
+* We're going to focus on 
+  * mining websites
+    * Webservices are easy!
+      * Websites much harder.
+  * automating webtasks
 </script>
 </div>
 </section>
@@ -101,110 +98,15 @@
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX
+## Web Mining
 
-````
-function getJSON( url, successCallback ) {
-   var xhr = new XMLHttpRequest();
-   xhr.open('GET', url);
-   // This is a call back
-   xhr.onreadystatechange = function(){
-       // readystate tells you how the transfer is going
-       // 4 is done
-       if( xhr.readyState === 4 ){
-           // This is the HTTP Code
-           if(xhr.status === 200){
-               successCallback( xhr.responseText );
-           } else {
-               alert("There was an error " + xhr.status);
-           }
-       }
-   };
-   // finally send it
-   xhr.send(null);
-}
-````
+* First 
+  * Why do you need to extract information from a website?
+    * Can't you get it elsewhere?
+  * Does the website provide an API or webservice? 
+    * Use that instead! Usually far better quality of data.
 </script>
 </div>
-<script>
-function getJSON( url, successCallback ) {
-   var xhr = new XMLHttpRequest();
-   xhr.open('GET', url);
-   // This is a call back
-   xhr.onreadystatechange = function(){
-       // readystate tells you how the transfer is going
-       // 4 is done
-       if( xhr.readyState === 4 ){
-           // This is the HTTP Code
-           if(xhr.status === 200){
-               try {
-                   successCallback( xhr.responseText );
-               } catch (err) {
-                   alert("Callback failed!" + err);
-               }
-           } else {
-               alert("There was an error " + xhr.status);
-           }
-       }
-   };
-   // finally send it
-   xhr.send(null);
-}
-</script>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
-
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## AJAX
-
-Now let's try to do something dynamic! With callbacks
-
-*
-[window.setInterval](http://www.w3schools.com/jsref/met_win_setinterval.asp)
-  * Lets run a function at a set interval.
-
-*
-[window.setTimeout](https://developer.mozilla.org/en/docs/Web/API/window.setTimeout)
-  * Lets you run a function after a period of time.
-
-````
-var myInterval;
-function startGetting() {
-    myInterval = window.setInterval( function() { //callback
-        var now = new Date();
-        var s = 1 + (now.getSeconds() % 3);
-        var url = s + ".json";
-        getJSON( url, function( ourJSON ) { //another
-            $("#ajaxy").text( ourJSON );    //callback
-        });
-    },1000); // 1 second or 1000 ms
-}
-````
-
-````
-<div id="ajaxy">AJAXY</div>
-````
-
-</script>
-</div>
-<script>
-function startGetting() {
-    window.setInterval( function() {
-        var now = new Date();
-        var s = 1 + (now.getSeconds() % 3);
-        var url = s + ".json";
-        getJSON( url, function( ourJSON ) {
-            $("#ajaxy").text( ourJSON );
-        });
-    },1000);
-}
-</script>
-<button onclick="javascript:startGetting()">Start Getting</button>
-<div id="ajaxy">AJAXY</div>
-
 </section>
 <!-- ######################## END MARKDOWN SLIDE ########################## -->
 
@@ -213,72 +115,124 @@ function startGetting() {
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX + JSON + JQuery
+## Task: CNN Headlines
 
-Now let's try to do something dynamic! With callbacks
+* First can we get the information automatically?
+  * Atom or RSS Feed
+    * Most websites have such a service
+      * http://www.cnn.com/services/rss/
+  * Webservice?
+    * Maybe check the site map:
+      * http://www.cnn.com/sitemap/
+    * Maybe an app already exists:
+      * http://www.cnn.com/tools/index.html  
 
-*
-[window.setInterval](http://www.w3schools.com/jsref/met_win_setinterval.asp)
-  * Lets run a function at a set interval.
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
 
-*
-[window.setTimeout](https://developer.mozilla.org/en/docs/Web/API/window.setTimeout)
-  * Lets you run a function after a period of time.
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Task: CNN Headlines
+
+* RSS Exists!
+  * Read license/TOS if they have one
+  * Use an RSS parser!
+    * RSS is a dialect of XML
+    * 2 Main versions both XML
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## RSS
+
+Example from the spec: http://web.resource.org/rss/1.0/spec
 
 ````
-function startGettingJQuery() {
-    var myInterval = window.setInterval( function() { //callback
-        var now = new Date();
-        var s = 1 + (now.getSeconds() % 3);
-        var url = s + ".json";
-        $.getJSON( url, function( data ) { 
-            // JSON Parsing
-            $("#ajaxy2").text( data.message ); 
-        });
-    },1000); // 1 second or 1000 ms
-}
+<?xml version="1.0"?>
 
-````
+<rdf:RDF 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns="http://purl.org/rss/1.0/"
+>
 
-````
-<div id="ajaxy2">AJAXY2</div>
+  <channel rdf:about="http://www.xml.com/xml/news.rss">
+    <title>XML.com</title>
+    <link>http://xml.com/pub</link>
+    <description>
+      XML.com features a rich mix of information and services 
+      for the XML community.
+    </description>
+
+    <image rdf:resource="http://xml.com/universal/images/xml_tiny.gif" />
+
+    <items>
+      <rdf:Seq>
+        <rdf:li resource="http://xml.com/pub/2000/08/09/xslt/xslt.html" />
+        <rdf:li resource="http://xml.com/pub/2000/08/09/rdfdb/index.html" />
+      </rdf:Seq>
+    </items>
+
+  </channel>
+  
+  <image rdf:about="http://xml.com/universal/images/xml_tiny.gif">
+    <title>XML.com</title>
+    <link>http://www.xml.com</link>
+    <url>http://xml.com/universal/images/xml_tiny.gif</url>
+  </image>
+  
+  <item rdf:about="http://xml.com/pub/2000/08/09/xslt/xslt.html">
+    <title>Processing Inclusions with XSLT</title>
+    <link>http://xml.com/pub/2000/08/09/xslt/xslt.html</link>
+    <description>
+     Processing document inclusions with general XML tools can be 
+     problematic. This article proposes a way of preserving inclusion 
+     information through SAX-based processing.
+    </description>
+  </item>
+  
+  <item rdf:about="http://xml.com/pub/2000/08/09/rdfdb/index.html">
+    <title>Putting RDF to Work</title>
+    <link>http://xml.com/pub/2000/08/09/rdfdb/index.html</link>
+    <description>
+     Tool and API support for the Resource Description Framework 
+     is slowly coming of age. Edd Dumbill takes a look at RDFDB, 
+     one of the most exciting new RDF toolkits.
+    </description>
+  </item>
+
+</rdf:RDF>
+
 ````
 
 </script>
 </div>
-<script>
-function startGettingJQuery() {
-    var myInterval = window.setInterval( function() { //callback
-        var now = new Date();
-        var s = 1 + (now.getSeconds() % 3);
-        var url = s + ".json";
-        $.getJSON( url, function( data ) { 
-            // JSON Parsing
-            $("#ajaxy2").text( data.message || data ); 
-        });
-    },1000); // 1 second or 1000 ms
-}
-</script>
-<button onclick="javascript:startGettingJQuery()">Start Getting</button>
-<div id="ajaxy2">AJAXY2</div>
-
 </section>
 <!-- ######################## END MARKDOWN SLIDE ########################## -->
-
 
 
 <!-- ######################## START MARKDOWN SLIDE ########################## -->
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX Design Suggestions
+## Atom
 
-* [Minimize AJAX requests and traffic](http://softwareas.com/ajax-patterns)
+Like RSS but:
 
-* Don't hook into every event, [use timeouts?](http://serversideguy.blogspot.ca/2004/12/google-suggest-dissected.html)
-
-* Use to ease page state transitions
-
+* Provides appropriate encoding of bodies
+* Focus on internationalization
+* IETF Standard http://tools.ietf.org/html/rfc4287
+* [Partial
+Content](http://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared#full)
+* Atom came after RSS to deal with any evolutionary
 
 
 </script>
@@ -291,71 +245,33 @@ function startGettingJQuery() {
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX: What are your events?
+## Atom
 
-* Per user input?
-* Per user commit?
-* Time based?
-* Per Server action?
-  * Polling?
-* Data?
-* Content oriented?
-* Messages?
-* Multimedia?
-* Read-based [(reddit)](http://www.reddit.com/r/programming/)
+Taken from http://tools.ietf.org/html/rfc4287
 
+````
+   <?xml version="1.0" encoding="utf-8"?>
+   <feed xmlns="http://www.w3.org/2005/Atom">
 
-</script>
-</div>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
+     <title>Example Feed</title>
+     <link href="http://example.org/"/>
+     <updated>2003-12-13T18:30:02Z</updated>
+     <author>
+       <name>John Doe</name>
+     </author>
+     <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
 
+     <entry>
+       <title>Atom-Powered Robots Run Amok</title>
+       <link href="http://example.org/2003/12/13/atom03"/>
+       <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+       <updated>2003-12-13T18:30:02Z</updated>
+       <summary>Some text.</summary>
+     </entry>
 
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## AJAX: Observer Pattern
+   </feed>
 
-* Observer pattern is where an observable keeps a collection of
-  observers (listeners) and notifies those observers if anything changed by
-  sending an update message.
-
-* This works great with AJAX if the observable is held client side in
-  a browser and the observer is client side in the browser! Go ahead!
-
-</script>
-</div>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
-
-
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<h2>AJAX: Observer Pattern</h2>
-
-<img style="margin: 5%; border: 0px;" src="images/observer.svg"/>
-
-
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
-
-
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## AJAX: Observer Pattern
-
-
-* Still works well with observable in browser and the observers
-  server-side, the client simply notifies via the server's observers
-  whenever an update occurs (but it should also communicate some
-  lightweight state).
-
-* Due to the lack of a client-side HTTP server it is problematic to do
-  the observer pattern with client side
-  [observers](http://css.dzone.com/articles/pushing-ajax-responses-using).
+````
 
 </script>
 </div>
@@ -366,21 +282,46 @@ function startGettingJQuery() {
 
 
 
+
 <!-- ######################## START MARKDOWN SLIDE ########################## -->
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX: Observer Pattern with Web Client Observers
+## Parsing RSS
 
-* HTTP is stateless, so a client needs to communicate somehow all of
-  the objects it is observing. 
-  * Perhaps a serverside Observer proxy that stores observables for a
-     client
-* Clients need to poll the server to check if there are updates. For
-  the observer pattern to work this polling should allow the server to
-  send update commands.
-* Due to bandwidth concerns and latency concerns, an update from the
-  server should probably include relevant data  
+* In Python
+  * Feedparser https://pypi.python.org/pypi/feedparser
+  * If you can't install anything you can try to use:
+  [xml.dom.minidom](http://docs.python.org/2/library/xml.dom.minidom.html)
+    * But RSS Is often ILL-FORMED XML and it will break.
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Feedparser Example
+
+Let's see if CNN and CBC have similar top stories!
+
+````
+    import feedparser
+    import difflib
+    cbc = feedparser.parse("http://rss.cbc.ca/lineup/topstories.xml")
+    cnn = feedparser.parse("http://rss.cnn.com/rss/cnn_topstories.rss")
+    cbc_titles = [x['title'] for x in cbc.get('entries')]
+    cnn_titles = [x['title'] for x in cnn.get('entries')]
+    res = [(x,difflib.get_close_matches(x,cbc_titles,1,0.01)) for x in
+                cnn_titles]
+>>> res[0]
+(u'7 days to solve Crimea crisis', [u'Russian forces tighten grip on Crimea'])
+```
 
 </script>
 </div>
@@ -391,59 +332,12 @@ function startGettingJQuery() {
 <section>
 <div data-markdown>
 <script type="text/template">
-## AJAX: Observer Pattern with Web Client Observers
+## Feedparser Example
 
-* Fighting against:
-  * Latency
-  * Bandwidth
-  * Lack of communication channels
-  * Lack of ability to push messages to a client
-  * Polling
-  * Timer smashing
-</script>
-</div>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
+Did you notice that we combined 2 data sources that were not already
+combined for us?
 
-
-
-
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## Dealing with Cross Domain Hickups
-
-* Provide explicit permission for Cross Domain using the
-  Access-Control-Allow-Origin: HTTP header
-  * http://www.webdevdoor.com/jquery/cross-domain-browser-json-ajax/
-* Provide a proxy!
-  * http://ajaxpatterns.org/archive/Cross-Domain_Proxy.php
-* Either reimplement a proxy via AJAX or just have a plain HTTP Proxy
-  that users can use!
-
-
-</script>
-</div>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
-
-
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## Timers
-
-* Don't send too many requests.
-
-* Bundle up messages to the server if possible.
-
-* Minimize the number of timers and the frequency of timers.
-  * E.g. if drawing a user doesn't need more than 30 frames of second
-  updates.
-
-* Don't send data if you don't have to!
+RSS/ATOM are relatively easy to scrape, but they don't give you everything.
 
 </script>
 </div>
@@ -454,29 +348,6 @@ function startGettingJQuery() {
 
 
 
-<!-- ######################## START MARKDOWN SLIDE ########################## -->
-<section>
-<div data-markdown>
-<script type="text/template">
-## AJAX Resources
-
-* [AJAX Patterns: Design Patterns for AJAX Usability](http://softwareas.com/ajax-patterns) --
-  Michael Mahemoff
-  * [AJAX Pattern](http://ajaxpatterns.org/)
-  * [O'Reilly Book](http://proquest.safaribooksonline.com/book/web-development/ajax/0596101805)
-* [Google Dissected](http://serversideguy.blogspot.ca/2004/12/google-suggest-dissected.html)
-* [Ajax Frameworks and Design Patterns
-  Survey](https://www.youtube.com/watch?v=sZqpmRlOjU8) (video)
-</script>
-</div>
-</section>
-<!-- ######################## END MARKDOWN SLIDE ########################## -->
-
-
-
-
-
-<!-- END -->
 
 
 <!-- ######################## START MARKDOWN SLIDE ########################## -->
