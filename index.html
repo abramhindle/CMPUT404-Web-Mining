@@ -93,6 +93,30 @@
 </section>
 <!-- ######################## END MARKDOWN SLIDE ########################## -->
 
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Web Mining Workflow
+
+* Retrieve the documents
+  * Get a bunch of documents
+* Extract information from documents
+  * Get the information we need from the documents.
+  * Parse them
+* Analyze Information
+  * From the extracted information, analyze the results
+* Aggregate and Report Results
+  * Take analyzed information and report about it
+
+This process might be continuous.
+
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
 
 <!-- ######################## START MARKDOWN SLIDE ########################## -->
 <section>
@@ -345,7 +369,178 @@ RSS/ATOM are relatively easy to scrape, but they don't give you everything.
 <!-- ######################## END MARKDOWN SLIDE ########################## -->
 
 
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Music Graph
 
+* Go to Allmusic.com
+* Find an artist
+* Find a similar artist
+* Can we do this via just URLs?
+
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Music Graph
+
+* Go to Allmusic.com
+* Find an artist
+  * Poke around
+````
+import urllib, urllib2
+artist = "devo"
+fd = urllib2.urlopen("http://allmusic.com/search/all%s" % artist)
+content = fd.read()
+# now we just have some HTML
+````
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Once you have HTML...
+
+So we have HTML now. What to do with it?
+
+````
+import urllib, urllib2
+artist = "devo"
+fd = urllib2.urlopen("http://allmusic.com/search/all%s" % artist)
+content = fd.read()
+# now we just have some HTML
+# we could use regexes and try to find links
+m = re.search('<a[^>]+href[^>]*artist[^<]+>.*Devo',content)
+m.group(0)
+# '<a href="http://www.allmusic.com/artist/devo-mn0000249973" data-tooltip="{&quot;id&quot;:&quot;MN0000249973&quot;,&quot;thumbnail&quot;:true}">Devo'
+
+````
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Once you have HTML...
+
+Really though it is HTML, it's better to actually parse it!
+
+````
+import urllib, urllib2
+artist = "devo"
+fd = urllib2.urlopen("http://allmusic.com/search/all%s" % artist)
+content = fd.read()
+# now we just have some HTML
+# we could use regexes and try to find links
+import bs4
+soup = bs4.BeautifulSoup(content)
+res = soup.findAll("",{"class":"artist"})
+res
+    [<li class="artist">
+    <div class="photo">
+    <a data-tooltip='{"id":"MN0000249973","thumbnail":true}' href="/artist/devo-mn0000249973">
+    <img alt="Devo" height="100" src="http://cps-static.rovicorp.com/3/JPG_170/MI0003/183/MI0003183801.jpg?partner=allrovi.com"/>
+    </a>
+    </div>
+    ...
+
+````
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Once you have HTML...
+
+````
+import urllib, urllib2
+artist = "devo"
+fd = urllib2.urlopen("http://allmusic.com/search/all/%s" % artist)
+content = fd.read()
+# now we just have some HTML
+# we could use regexes and try to find links
+import bs4
+soup = bs4.BeautifulSoup(content)
+res = soup.findAll("",{"class":"artist"})
+ahref = res[0].findAll("",{"class":"name"})[0].a
+name = ahref.text.strip()
+link = ahref.attrs["href"]
+>>> link
+'http://www.allmusic.com/artist/devo-mn0000249973'
+````
+
+Now we have the link!
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Now onto finding a similar artist
+
+* Go to Allmusic.com
+* Find an artist
+* Find a similar artist
+
+
+````
+link = 'http://www.allmusic.com/artist/devo-mn0000249973'
+
+````
+
+Now we have the link!
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
+
+
+
+
+<!-- ######################## START MARKDOWN SLIDE ########################## -->
+<section>
+<div data-markdown>
+<script type="text/template">
+## Resources
+
+* Python and HTML Processing
+http://www.boddie.org.uk/python/HTML.html
+* Beautiful Soup -- Screen Scraping! http://www.crummy.com/software/BeautifulSoup/
+
+</script>
+</div>
+</section>
+<!-- ######################## END MARKDOWN SLIDE ########################## -->
 
 
 
