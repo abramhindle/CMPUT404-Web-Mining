@@ -81,7 +81,7 @@ for art in graph["devo"]["similar"].keys():
         graph[art] = getartist(art)
     links = get_similar( graph[art] )
     print links
-    add_similar(graph, graph[artist], links)
+    add_similar(graph, graph[art], links)
 
 
 

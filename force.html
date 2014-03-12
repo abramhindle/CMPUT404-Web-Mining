@@ -38,7 +38,7 @@ text {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var minChildren = 50;
+var minChildren = 30;
 
 function debug(str) {
     document.getElementById("debug").innerHTML = str;
@@ -110,7 +110,7 @@ d3.json("ourgraph.json", function(error, graph) {
         .links(links)
         .size([width, height])
         .linkDistance(300)
-        .charge(-300)
+        .charge(-50)
         .on("tick", tick)
         .start();
     
