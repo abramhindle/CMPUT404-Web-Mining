@@ -30,7 +30,7 @@ var bundle = d3.layout.bundle();
 
 var line = d3.svg.line.radial()
     .interpolate("bundle")
-    .tension(.5)
+    .tension(.9999)
     .radius(function(d) { return d.y; })
     .angle(function(d) { return d.x / 180 * Math.PI; });
 
@@ -94,11 +94,22 @@ function packageHierarchy(classes) {
     var node = map[name], i;
     if (!node) {
       node = map[name] = data || {name: name, children: []};
+      node.children = node.children || [];
       if (name.length) {
         //node.parent = "" + data.similar.length;
-        node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
-        node.parent.children.push(node);
-        node.key = name.substring(i + 1);
+        //node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
+        //node.parent = find(name.substring(0, i = name.length - 1 ));
+	//var pname = name.substring(0,i = name.length - 1 );
+	//var pname = name.substring(0,name.length - 2 );
+	//var pname = name.substring(0,name.length - 1);
+	var pname = "";//name.substring(0,name.length/2);
+	var pname = name.substring(0,Math.min(name.length - 1, 1));
+	if (name!=pname) {
+	        node.parent = find( pname );
+        	node.parent.children.push(node);
+	        //node.key = name.substring(i + 1);
+	}
+        node.key = name;
       }
     }
     return node;
