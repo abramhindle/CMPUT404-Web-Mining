@@ -1,4 +1,6 @@
 import urllib, urllib2
+import time
+import json
 
 def GET(url):
     req = urllib2.Request(url)
@@ -72,13 +74,30 @@ def add_similar(graph, artist_entry, links):
             graph[sartist] = newartist(sartist,url)
         graph[name]["similar"][sartist] = url
 
-for art in graph["devo"]["similar"]:
+
+for art in graph["devo"]["similar"].keys():
     print "Adding %s" % art
     if (graph.get(art,None) == None):
         graph[art] = getartist(art)
     links = get_similar( graph[art] )
     print links
     add_similar(graph, graph[artist], links)
-    
-import json
+
+
+
 file("devo.json","w").write(json.dumps(graph,indent=1))
+
+for art in graph.keys():
+    if (len(graph[art]["similar"]) < 1 and 
+        not graph[art].get("hit",False)):
+            graph[art]["hit"] = True
+            print art
+            links = get_similar( graph[art] )
+            add_similar(graph, graph[art], links)
+            # save state just in case
+            file("ourgraph.json","w").write(json.dumps(graph,indent=1))
+            print "..."
+            # do you want to get banned from crawling?
+            time.sleep(2)
+
+
