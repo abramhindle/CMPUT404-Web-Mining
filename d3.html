@@ -40,7 +40,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + radius + "," + radius + ")");
 
-d3.json("ourgraph.json", function(error, graph) {
+d3.json("devo.json", function(error, graph) {
     var classes = [];
     for (var key in graph) {
         var val = new Array();
