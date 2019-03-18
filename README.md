@@ -9,4 +9,7 @@ Examples
 ========
 
 * allmusic.py - allmusic scraper! Uses beautiful soup
+  * watch out it replaces your .json file
+  * [./d3.html](./d3.html) will visualize the output 
+  * [./force.html](./force.html) uses a force layout 
 * sidewalk-report.py - selenium scraper
